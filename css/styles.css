@@ -267,40 +267,15 @@ p {
 .logo {
   display: flex;
   align-items: center;
-  gap: 10px;
   text-decoration: none;
 }
 
 .logo:hover { text-decoration: none; }
 
-.logo-mark {
-  flex-shrink: 0;
-}
-
-.logo-text {
-  line-height: 1.15;
-}
-
-.logo-text strong {
+.logo-img {
+  height: 68px;
+  width: auto;
   display: block;
-  font-size: 1rem;
-  font-weight: 800;
-  letter-spacing: -0.01em;
-  color: var(--primary);
-}
-
-.logo-text strong em {
-  color: var(--accent);
-  font-style: normal;
-}
-
-.logo-text small {
-  display: block;
-  font-size: 0.6rem;
-  color: var(--text-muted);
-  font-weight: 500;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
 }
 
 /* ── 9. Hero ───────────────────────────────────────────────── */
