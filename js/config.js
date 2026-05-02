@@ -9,7 +9,7 @@ const BRAND = {
   primary_color: "#1B2A49",
   accent_color: "#2FA4B8",
   cta_text: "Apply Now",
-  whatsapp_number: "+27820000000",
+  whatsapp_number: "+27615439540",
   loan_type: "Personal Loans",
   max_amount: "R8,000",
   min_amount: "R1,000",
