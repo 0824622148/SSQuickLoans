@@ -16,7 +16,7 @@ const BRAND = {
   min_amount: "R1,000",
   interest_rate_monthly: 5.5,
   // Free key (250/month) — sign up at https://web3forms.com with mayibongweshabangu16@gmail.com then paste the access key here
-  web3forms_key: "",
+  web3forms_key: "b03c1e3a-55a1-4e9c-ba0c-706e6a861c81",
 };
 
 function applyBrand(config) {
