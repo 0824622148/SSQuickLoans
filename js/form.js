@@ -343,13 +343,13 @@
   // ── Email notification via Web3Forms ─────────────────────
   function sendEmail(data) {
     const key = (window.VUKA && window.VUKA.web3forms_key) || "";
-    if (!key) return;
+    if (!key) return Promise.resolve();
 
     const income    = (parseFloat(data.monthly_income) || 0).toLocaleString("en-ZA");
     const amount    = (parseFloat(data.loan_amount)    || 0).toLocaleString("en-ZA");
     const submitted = new Date(data.submitted_at).toLocaleString("en-ZA", { timeZone: "Africa/Johannesburg" });
 
-    fetch("https://api.web3forms.com/submit", {
+    return fetch("https://api.web3forms.com/submit", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -430,16 +430,15 @@
           sessionStorage.setItem("vuka_submission", JSON.stringify(data));
         } catch (_) {}
 
-        // Send email notification (fire-and-forget)
-        sendEmail(data);
-
-        // Visual feedback before redirect
+        // Visual feedback
         submitBtn.textContent = "Submitting…";
         submitBtn.disabled = true;
 
-        setTimeout(() => {
+        // Wait for email to send, then redirect (max 5s fallback)
+        var timeout = new Promise(function (resolve) { setTimeout(resolve, 5000); });
+        Promise.race([sendEmail(data), timeout]).then(function () {
           window.location.href = "success.html";
-        }, 800);
+        });
       });
     }
 
