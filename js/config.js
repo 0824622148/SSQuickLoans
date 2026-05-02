@@ -15,8 +15,8 @@ const BRAND = {
   max_amount: "R8,000",
   min_amount: "R1,000",
   interest_rate_monthly: 5.5,
-  // Free endpoint — sign up at https://formspree.io with mayibongweshabangu16@gmail.com, create a form, then paste the endpoint URL here (e.g. "https://formspree.io/f/abcdefgh")
-  formspree_endpoint: "",
+  // Free key (250/month) — sign up at https://web3forms.com with mayibongweshabangu16@gmail.com then paste the access key here
+  web3forms_key: "",
 };
 
 function applyBrand(config) {

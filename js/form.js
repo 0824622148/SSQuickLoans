@@ -340,20 +340,22 @@
     other:         "Other",
   };
 
-  // ── Email notification via Formspree ─────────────────────
+  // ── Email notification via Web3Forms ─────────────────────
   function sendEmail(data) {
-    const endpoint = (window.VUKA && window.VUKA.formspree_endpoint) || "";
-    if (!endpoint) return;
+    const key = (window.VUKA && window.VUKA.web3forms_key) || "";
+    if (!key) return;
 
     const income    = (parseFloat(data.monthly_income) || 0).toLocaleString("en-ZA");
     const amount    = (parseFloat(data.loan_amount)    || 0).toLocaleString("en-ZA");
     const submitted = new Date(data.submitted_at).toLocaleString("en-ZA", { timeZone: "Africa/Johannesburg" });
 
-    fetch(endpoint, {
+    fetch("https://api.web3forms.com/submit", {
       method: "POST",
-      headers: { "Content-Type": "application/json", "Accept": "application/json" },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        "_subject":          "New Loan Application — " + data.full_name,
+        access_key:          key,
+        subject:             "New Loan Application — " + data.full_name,
+        from_name:           "SS Quick Loans Website",
         "Full Name":         data.full_name,
         "SA ID Number":      data.sa_id_number,
         "Phone":             data.phone,
