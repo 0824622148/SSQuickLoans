@@ -10,10 +10,13 @@ const BRAND = {
   accent_color: "#2FA4B8",
   cta_text: "Apply Now",
   whatsapp_number: "+27615439540",
+  owner_email: "mayibongweshabangu16@gmail.com",
   loan_type: "Personal Loans",
   max_amount: "R8,000",
   min_amount: "R1,000",
   interest_rate_monthly: 5.5,
+  // Free email key — sign up at https://web3forms.com with mayibongweshabangu16@gmail.com then paste the key here
+  web3forms_key: "",
 };
 
 function applyBrand(config) {

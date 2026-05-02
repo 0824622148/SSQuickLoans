@@ -77,19 +77,54 @@
     <!-- Scripts -->
     <script src="js/config.js"></script>
     <script>
-      // Show applicant's name in the greeting if available
-      (function () {
+      document.addEventListener("DOMContentLoaded", function () {
         try {
           const sub = sessionStorage.getItem("vuka_submission");
-          if (sub) {
-            const data = JSON.parse(sub);
-            if (data.full_name) {
-              const h1 = document.querySelector("h1");
-              if (h1) h1.textContent = "Application Received, " + data.full_name.split(" ")[0] + "!";
-            }
+          if (!sub) return;
+          const data = JSON.parse(sub);
+
+          // Personalise greeting
+          if (data.full_name) {
+            const h1 = document.querySelector("h1");
+            if (h1) h1.textContent = "Application Received, " + data.full_name.split(" ")[0] + "!";
+          }
+
+          // Employment label
+          const empLabels = {
+            employed:        "Permanently Employed",
+            contract:        "Contract / Temp",
+            "self-employed": "Self-Employed / Business Owner",
+            pensioner:       "Pensioner / Grant Recipient",
+            other:           "Other",
+          };
+
+          const income    = (parseFloat(data.monthly_income) || 0).toLocaleString("en-ZA");
+          const amount    = (parseFloat(data.loan_amount)    || 0).toLocaleString("en-ZA");
+          const submitted = new Date(data.submitted_at).toLocaleString("en-ZA", { timeZone: "Africa/Johannesburg" });
+
+          // Build full application summary for WhatsApp
+          const msg =
+            "*New Loan Application — SS Quick Loans*\n\n" +
+            "*Name:* "         + (data.full_name || "")                                     + "\n" +
+            "*SA ID:* "        + (data.sa_id_number || "")                                  + "\n" +
+            "*Phone:* "        + (data.phone || "")                                         + "\n" +
+            "*Email:* "        + (data.email || "")                                         + "\n" +
+            "*Employment:* "   + (empLabels[data.employment_status] || data.employment_status || "") + "\n" +
+            "*Monthly Income:* R" + income                                                  + "\n" +
+            "*Loan Amount:* R" + amount                                                     + "\n" +
+            "*Loan Term:* "    + (data.loan_term_months || "") + " months"                  + "\n" +
+            "*Submitted:* "    + submitted;
+
+          const waNum = (window.VUKA && window.VUKA.whatsapp_number)
+            ? window.VUKA.whatsapp_number.replace(/\D/g, "")
+            : "27615439540";
+
+          const waLink = document.getElementById("whatsapp-link");
+          if (waLink) {
+            waLink.href = "https://wa.me/" + waNum + "?text=" + encodeURIComponent(msg);
           }
         } catch (_) {}
-      }());
+      });
     </script>
   </body>
 </html>

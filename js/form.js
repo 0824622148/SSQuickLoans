@@ -331,6 +331,44 @@
     };
   }
 
+  // ── Employment label lookup (used in email + WhatsApp) ───
+  const EMP_LABELS = {
+    employed:      "Permanently Employed",
+    contract:      "Contract / Temp",
+    "self-employed": "Self-Employed / Business Owner",
+    pensioner:     "Pensioner / Grant Recipient",
+    other:         "Other",
+  };
+
+  // ── Email notification via Web3Forms ─────────────────────
+  function sendEmail(data) {
+    const key = (window.VUKA && window.VUKA.web3forms_key) || "";
+    if (!key) return;
+
+    const income    = (parseFloat(data.monthly_income) || 0).toLocaleString("en-ZA");
+    const amount    = (parseFloat(data.loan_amount)    || 0).toLocaleString("en-ZA");
+    const submitted = new Date(data.submitted_at).toLocaleString("en-ZA", { timeZone: "Africa/Johannesburg" });
+
+    fetch("https://api.web3forms.com/submit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        access_key:          key,
+        subject:             "New Loan Application — " + data.full_name,
+        from_name:           "SS Quick Loans Website",
+        "Full Name":         data.full_name,
+        "SA ID Number":      data.sa_id_number,
+        "Phone":             data.phone,
+        "Applicant Email":   data.email,
+        "Employment Status": EMP_LABELS[data.employment_status] || data.employment_status,
+        "Monthly Income":    "R" + income,
+        "Loan Amount":       "R" + amount,
+        "Loan Term":         data.loan_term_months + " months",
+        "Submitted At":      submitted,
+      }),
+    }).catch(() => {});
+  }
+
   // ── Navigation handlers ───────────────────────────────────
   function goTo(n) {
     currentStep = n;
@@ -387,11 +425,13 @@
         if (!validateStep4()) return;
 
         const data = collectFormData();
-        console.log("[Vuka Engine] Application submission:", data);
 
         try {
           sessionStorage.setItem("vuka_submission", JSON.stringify(data));
         } catch (_) {}
+
+        // Send email notification (fire-and-forget)
+        sendEmail(data);
 
         // Visual feedback before redirect
         submitBtn.textContent = "Submitting…";
@@ -399,7 +439,7 @@
 
         setTimeout(() => {
           window.location.href = "success.html";
-        }, 600);
+        }, 800);
       });
     }
 
